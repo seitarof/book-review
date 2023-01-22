@@ -18,40 +18,28 @@ import { url } from '../../const'
 import { useCookies } from 'react-cookie'
 import { useMessage } from '../../hooks/useMessage'
 import Compressor from 'compressorjs'
-import imageCompression from 'browser-image-compression'
+import { SubmitHandler, useForm } from 'react-hook-form'
+
+type Input = {
+  email: string
+  name: string
+  password: string
+}
 
 const SignUp = () => {
-  const [name, setName] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
   const [photo, setPhoto] = useState<File>()
   const [cookies, setCookie, removeCookie] = useCookies()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<Input>()
   const navigate = useNavigate()
   const { showMessage } = useMessage()
-
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setName(e.target.value)
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setEmail(e.target.value)
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setPassword(e.target.value)
 
   const handlePhotoChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return
     const data = e.target.files[0]
-    // const option = {
-    //   maxSizeMB: 1,
-    //   maxWidthOrHeight: 500,
-    //   useWebWorker: true,
-    //   fileType: 'image/png'
-    // }
-    // try {
-    //   const compressedFile = await imageCompression(data, option)
-    //   setPhoto(compressedFile)
-    //   console.log(compressedFile);
-    // } catch (error) {
-    //   console.error(error);
-    // }
     new Compressor(data, {
       quality: 0.6,
       maxWidth: 300,
@@ -67,12 +55,18 @@ const SignUp = () => {
     })
   }
 
-  const onSubmit = async () => {
-    if (photo === undefined || name === "" || email === "" || password === "") return;
+  const onSubmit: SubmitHandler<Input> = async (value) => {
+    if (
+      photo === undefined ||
+      value.name === '' ||
+      value.email === '' ||
+      value.password === ''
+    )
+      return
     const data = {
-      name,
-      email,
-      password,
+      name: value.name,
+      email: value.email,
+      password: value.password,
     }
     axios
       .post(`${url}/users`, data)
@@ -81,19 +75,19 @@ const SignUp = () => {
         // console.log(token);
         setCookie('token', token)
         // const data2 = URL.createObjectURL(photo)
-        console.log(photo);
-        const params = new FormData();
-        params.append('file', photo, photo.name);
+        console.log(photo)
+        const params = new FormData()
+        params.append('icon', photo, photo.name)
 
         axios
           .post(`${url}/uploads`, params, {
             headers: {
               Authorization: `Bearer ${token}`,
-              "content-type": 'multipart/form-data'
-            }
+              'content-type': 'multipart/form-data',
+            },
           })
           .then((res) => {
-            console.log(res);
+            console.log(res)
             showMessage({ title: '登録しました', status: 'success' })
             navigate('/login')
           })
@@ -113,50 +107,78 @@ const SignUp = () => {
           <Heading as="h1" size="lg" textAlign="center">
             サインアップ
           </Heading>
-          <FormControl>
-            <FormLabel>プロフィール画像</FormLabel>
-            <Input
-              variant="unstyled"
-              id="file"
-              type="file"
-              onChange={handlePhotoChange}
-              accept="image/*"
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>名前</FormLabel>
-            <Input
-              type="text"
-              id="name"
-              onChange={handleNameChange}
-              value={name}
-              placeholder="ユーザー名"
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>メールアドレス</FormLabel>
-            <Input
-              type="email"
-              id="email"
-              onChange={handleEmailChange}
-              value={email}
-              placeholder="メールアドレス"
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>パスワード</FormLabel>
-            <Input
-              type="password"
-              id="password"
-              onChange={handlePasswordChange}
-              value={password}
-              placeholder="パスワード"
-            />
-          </FormControl>
-          <Button colorScheme="teal" type="submit" onClick={onSubmit}>
-            登録
-          </Button>
-          <Text>登録済みの方は<Link href='/login' color='teal'>こちら</Link>から</Text>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FormControl>
+              <FormLabel>プロフィール画像</FormLabel>
+              <Input
+                variant="unstyled"
+                id="file"
+                type="file"
+                onChange={handlePhotoChange}
+                accept="image/*"
+              />
+            </FormControl>
+            <FormControl isInvalid={!!errors.name}>
+              <FormLabel>名前</FormLabel>
+              <Input
+                type="text"
+                id="name"
+                placeholder="ユーザー名"
+                {...register('name', {
+                  required: 'この項目は必須です',
+                  minLength: {
+                    value: 1,
+                    message: 'Minumum length should be 1',
+                  },
+                })}
+              />
+              <FormErrorMessage>
+                {errors.name && errors.name.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={!!errors.email}>
+              <FormLabel>メールアドレス</FormLabel>
+              <Input
+                type="email"
+                id="email"
+                placeholder="メールアドレス"
+                {...register('email', {
+                  required: 'この項目は必須です',
+                  pattern: {
+                    value: /^[\w\-._]+@[\w\-._]+\.[A-Za-z]+/,
+                    message: '入力形式がメールアドレスではありません。',
+                  },
+                })}
+              />
+              <FormErrorMessage>
+                {errors.email && errors.email.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={!!errors.password}>
+              <FormLabel>パスワード</FormLabel>
+              <Input
+                type="password"
+                id="password"
+                placeholder="パスワード"
+                {...register('password', {
+                  required: 'この項目は必須です'
+                })}
+              />
+              <FormErrorMessage>
+                {errors.password && errors.password.message}
+              </FormErrorMessage>
+            </FormControl>
+            <Button colorScheme="teal" type="submit" isLoading={isSubmitting}>
+              登録
+            </Button>
+            <Text>
+              登録済みの方は
+              <Link href="/login" color="teal">
+                こちら
+              </Link>
+              から
+            </Text>
+          </form>
         </Box>
       </Flex>
     </>

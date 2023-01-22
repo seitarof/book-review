@@ -19,7 +19,7 @@ import { Form } from 'react-router-dom'
 import { useMessage } from '../../hooks/useMessage'
 
 type Inputs = {
-  email: string,
+  email: string
   password: string
 }
 
@@ -27,7 +27,11 @@ const SignIn = () => {
   // const [cookies, removeCookie, setCookie]
   // const [isSignIn, setIsSignIn] = useState<boolean>(false)
   const { showMessage } = useMessage()
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<Inputs>()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<Inputs>()
   const navigate = useNavigate()
 
   const onSubmit: SubmitHandler<Inputs> = (d) => {
@@ -44,7 +48,7 @@ const SignIn = () => {
       .catch((err) => {
         showMessage({
           title: '認証失敗',
-          status: 'error'
+          status: 'error',
         })
       })
   }
@@ -55,7 +59,7 @@ const SignIn = () => {
           <Heading as="h1" size="lg" textAlign="center">
             ログイン
           </Heading>
-          <form onSubmit={handleSubmit(onSubmit)} role='form'>
+          <form onSubmit={handleSubmit(onSubmit)} role="form">
             <FormControl isInvalid={!!errors.email}>
               <FormLabel htmlFor="email">メールアドレス</FormLabel>
               <Input
@@ -65,11 +69,11 @@ const SignIn = () => {
                   required: 'この項目は必須です',
                   pattern: {
                     value: /^[\w\-._]+@[\w\-._]+\.[A-Za-z]+/,
-                    message: "入力形式がメールアドレスではありません。"
-                  }
+                    message: '入力形式がメールアドレスではありません。',
+                  },
                 })}
               />
-              <FormErrorMessage id='email-err'>
+              <FormErrorMessage id="email-err">
                 {errors.email && errors.email.message}
               </FormErrorMessage>
             </FormControl>
@@ -81,17 +85,31 @@ const SignIn = () => {
                 placeholder="パスワード"
                 {...register('password', {
                   required: 'この項目は必須です',
-                  minLength: { value: 1, message: "Minumum length should be 1" },
+                  minLength: {
+                    value: 1,
+                    message: 'Minumum length should be 1',
+                  },
                 })}
               />
               <FormErrorMessage>
                 {errors.password && errors.password.message}
               </FormErrorMessage>
             </FormControl>
-            <Button colorScheme="teal" type="submit" id="submit" isLoading={isSubmitting}>
+            <Button
+              colorScheme="teal"
+              type="submit"
+              id="submit"
+              isLoading={isSubmitting}
+            >
               ログイン
             </Button>
-            <Text>新規登録は<Link href='/signup' color='teal'>こちら</Link>から</Text>
+            <Text>
+              新規登録は
+              <Link href="/signup" color="teal">
+                こちら
+              </Link>
+              から
+            </Text>
           </form>
         </Box>
       </Flex>
