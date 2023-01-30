@@ -17,6 +17,7 @@ import {
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Form } from 'react-router-dom'
 import { useMessage } from '../../hooks/useMessage'
+import { useCookies } from 'react-cookie'
 
 type Inputs = {
   email: string
@@ -24,8 +25,7 @@ type Inputs = {
 }
 
 const SignIn = () => {
-  // const [cookies, removeCookie, setCookie]
-  // const [isSignIn, setIsSignIn] = useState<boolean>(false)
+  const [cookies, setCookie, removeCookie] = useCookies(['token'])
   const { showMessage } = useMessage()
   const {
     register,
@@ -39,10 +39,13 @@ const SignIn = () => {
       email: d.email,
       password: d.password,
     }
+    console.log(data)
+
     axios
       .post(url + '/signin', data)
       .then((res) => {
-        console.log(res.data)
+        const token = res.data.token
+        setCookie('token', token)
         navigate('/')
       })
       .catch((err) => {
@@ -50,8 +53,10 @@ const SignIn = () => {
           title: '認証失敗',
           status: 'error',
         })
+        console.error(err)
       })
   }
+
   return (
     <>
       <Flex align="center" justify="center" height="100vh">

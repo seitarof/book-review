@@ -13,8 +13,8 @@ context('Actions', () => {
     cy.get('#submit').click()
 
     // assert(Cypress.$('#email-err').length == 0)
-    cy.get('#email-err').then(e => {
-      console.log(e);
+    cy.get('#email-err').then((e) => {
+      console.log(e)
     })
 
     cy.get('#email')

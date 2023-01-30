@@ -4,7 +4,6 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Heading,
   Input,
@@ -72,7 +71,6 @@ const SignUp = () => {
       .post(`${url}/users`, data)
       .then(async (res) => {
         const token = res.data.token
-        // console.log(token);
         setCookie('token', token)
         // const data2 = URL.createObjectURL(photo)
         console.log(photo)
@@ -161,7 +159,7 @@ const SignUp = () => {
                 id="password"
                 placeholder="パスワード"
                 {...register('password', {
-                  required: 'この項目は必須です'
+                  required: 'この項目は必須です',
                 })}
               />
               <FormErrorMessage>
