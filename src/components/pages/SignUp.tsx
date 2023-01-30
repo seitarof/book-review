@@ -11,7 +11,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { url } from '../../const'
 import { useCookies } from 'react-cookie'
@@ -72,8 +72,6 @@ const SignUp = () => {
       .then(async (res) => {
         const token = res.data.token
         setCookie('token', token)
-        // const data2 = URL.createObjectURL(photo)
-        console.log(photo)
         const params = new FormData()
         params.append('icon', photo, photo.name)
 
@@ -87,7 +85,7 @@ const SignUp = () => {
           .then((res) => {
             console.log(res)
             showMessage({ title: '登録しました', status: 'success' })
-            navigate('/login')
+            navigate('/')
           })
           .catch((err) => {
             console.error(err)
@@ -98,6 +96,12 @@ const SignUp = () => {
         showMessage({ title: err, status: 'error' })
       })
   }
+
+  useEffect(() => {
+    if (cookies.token) {
+      navigate('/')
+    }
+  }, [])
   return (
     <>
       <Flex align="center" justify="center" height="100vh">

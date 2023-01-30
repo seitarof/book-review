@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { url } from '../../const'
 import { useNavigate } from 'react-router'
 import {
@@ -56,6 +56,12 @@ const SignIn = () => {
         console.error(err)
       })
   }
+
+  useEffect(() => {
+    if (cookies.token) {
+      navigate('/')
+    }
+  }, [])
 
   return (
     <>
