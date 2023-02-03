@@ -1,5 +1,6 @@
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
 import axios from 'axios'
+import { remove } from 'cypress/types/lodash'
 import React, { FC, memo, useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { Link, useNavigate } from 'react-router-dom'
@@ -19,6 +20,7 @@ const Header: FC = memo(() => {
   }
 
   useEffect(() => {
+    console.log(cookies.token);
     if (cookies.token) {
       axios
         .get(`${url}/users`, {
@@ -33,6 +35,7 @@ const Header: FC = memo(() => {
         })
         .catch((err) => {
           console.error(err)
+          removeCookie('token')
         })
     }
   }, [])
@@ -57,13 +60,9 @@ const Header: FC = memo(() => {
 
         <Box fontSize="sm" display={{ base: 'none', md: 'flex' }}>
           {cookies.token ? (
-            <>
-              <Text>
-                {username}
-              </Text>
-            </>
+            <Text>{username}</Text>
           ) : (
-            <Button onClick={onClickLogin}>ログイン</Button>
+            <Text onClick={onClickLogin}>ログイン</Text>
           )}
         </Box>
       </Flex>

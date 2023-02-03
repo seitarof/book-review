@@ -3,7 +3,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { decrement, increment, selectOffset } from '../../app/offsetSlice'
+import { decrement, increment, incrementByAmount, selectOffset } from '../../app/offsetSlice'
 import { url } from '../../const'
 import { Book } from '../../types/Book'
 import Books from '../organisms/books/Books'
@@ -43,6 +43,29 @@ const Home = () => {
         <Box>
           <Button disabled={offset === 0} onClick={() => dispatch(decrement())}>
             前へ
+          </Button>
+          {offset / 10 - 1 > 0 ? (
+            <Button onClick={() => dispatch(incrementByAmount(-20))}>
+              {offset / 10 - 1}
+            </Button>
+          ) : (
+            <></>
+          )}
+          {offset / 10 > 0 ? (
+            <Button onClick={() => dispatch(incrementByAmount(-10))}>
+              {offset / 10}
+            </Button>
+          ) : (
+            <></>
+          )}
+          <Button disabled={true}>
+            {offset / 10 + 1}
+          </Button>
+          <Button onClick={() => dispatch(incrementByAmount(10))}>
+            {offset / 10 + 2}
+          </Button>
+          <Button onClick={() => dispatch(incrementByAmount(20))}>
+            {offset / 10 + 3}
           </Button>
           <Button onClick={() => dispatch(increment())}>次へ</Button>
         </Box>

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from './store'
 
 interface OffsetState {
@@ -14,15 +14,18 @@ export const offsetSlice = createSlice({
   initialState,
   reducers: {
     increment: (state) => {
-      state.value += 1
+      state.value += 10
     },
     decrement: (state) => {
-      state.value -= 1
+      state.value -= 10
     },
+    incrementByAmount: (state, action: PayloadAction<number>) => {
+      state.value += action.payload
+    }
   },
 })
 
-export const { increment, decrement } = offsetSlice.actions
+export const { increment, decrement, incrementByAmount } = offsetSlice.actions
 
 export const selectOffset = (state: RootState) => state.offset.value
 
