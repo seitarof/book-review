@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Wrap } from '@chakra-ui/react'
+import { Box, Button, ButtonGroup, Center, HStack, Wrap, WrapItem } from '@chakra-ui/react'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
@@ -40,7 +40,9 @@ const Home = () => {
         maxWidth="1000px"
       >
         <Books books={books} key={offset} />
-        <Box>
+      </Wrap>
+      <Center>
+        <HStack mb={10}>
           <Button disabled={offset === 0} onClick={() => dispatch(decrement())}>
             前へ
           </Button>
@@ -68,8 +70,8 @@ const Home = () => {
             {offset / 10 + 3}
           </Button>
           <Button onClick={() => dispatch(increment())}>次へ</Button>
-        </Box>
-      </Wrap>
+        </HStack>
+      </Center>
     </>
   )
 }

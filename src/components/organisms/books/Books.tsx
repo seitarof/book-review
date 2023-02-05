@@ -11,7 +11,6 @@ type Props = {
 }
 
 const Books: FC<Props> = (props) => {
-  const [cookies, setCookie, removeCookie] = useCookies(['token'])
   const { books } = props
 
   return (

@@ -20,7 +20,6 @@ const Header: FC = memo(() => {
   }
 
   useEffect(() => {
-    console.log(cookies.token);
     if (cookies.token) {
       axios
         .get(`${url}/users`, {
