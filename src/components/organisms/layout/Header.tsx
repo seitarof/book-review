@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie'
 import { Link, useNavigate } from 'react-router-dom'
 import { url } from '../../../const'
 
-const Header: FC = memo(() => {
+const Header: FC = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['token'])
   const [username, setUsername] = useState<string>("")
   const navigate = useNavigate()
@@ -14,9 +14,16 @@ const Header: FC = memo(() => {
   const onClickTitle = () => {
     navigate('/')
   }
+  const onClickProfile = () => {
+    navigate('/profile')
+  }
 
   const onClickLogin = () => {
-    navigate('login')
+    navigate('/login')
+  }
+  const onClickLogout = () => {
+    removeCookie('token')
+    navigate('/login')
   }
 
   useEffect(() => {
@@ -37,7 +44,7 @@ const Header: FC = memo(() => {
           removeCookie('token')
         })
     }
-  }, [])
+  }, [username])
 
 
   return (
@@ -56,10 +63,16 @@ const Header: FC = memo(() => {
             </Heading>
           </Box>
         </Flex>
+        <Box>
+          <Text onClick={onClickProfile}>プロフィール</Text>
+        </Box>
 
         <Box fontSize="sm" display={{ base: 'none', md: 'flex' }}>
           {cookies.token ? (
-            <Text>{username}</Text>
+            <>
+              <Text pr={10}>{username}</Text>
+              <Text onClick={onClickLogout}>ログアウト</Text>
+            </>
           ) : (
             <Text onClick={onClickLogin}>ログイン</Text>
           )}
@@ -67,7 +80,7 @@ const Header: FC = memo(() => {
       </Flex>
     </>
   )
-})
+}
 
 Header.displayName = 'Header'
 
