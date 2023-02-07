@@ -6,7 +6,7 @@ interface OffsetState {
 }
 
 const initialState: OffsetState = {
-  value: 0
+  value: 0,
 }
 
 export const offsetSlice = createSlice({
@@ -21,7 +21,7 @@ export const offsetSlice = createSlice({
     },
     incrementByAmount: (state, action: PayloadAction<number>) => {
       state.value += action.payload
-    }
+    },
   },
 })
 

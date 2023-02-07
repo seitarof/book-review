@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, LinkBox, Text } from '@chakra-ui/react'
 import axios from 'axios'
 import { remove } from 'cypress/types/lodash'
 import React, { FC, memo, useEffect, useState } from 'react'
@@ -8,7 +8,7 @@ import { url } from '../../../const'
 
 const Header: FC = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['token'])
-  const [username, setUsername] = useState<string>("")
+  const [username, setUsername] = useState<string>('')
   const navigate = useNavigate()
 
   const onClickTitle = () => {
@@ -16,6 +16,9 @@ const Header: FC = () => {
   }
   const onClickProfile = () => {
     navigate('/profile')
+  }
+  const onClickCreateReview = () => {
+    navigate('/new')
   }
 
   const onClickLogin = () => {
@@ -46,7 +49,6 @@ const Header: FC = () => {
     }
   }, [username])
 
-
   return (
     <>
       <Flex
@@ -63,9 +65,8 @@ const Header: FC = () => {
             </Heading>
           </Box>
         </Flex>
-        <Box>
-          <Text onClick={onClickProfile}>プロフィール</Text>
-        </Box>
+        <Text onClick={onClickProfile}>プロフィール</Text>
+        <Text onClick={onClickCreateReview}>レビュー登録</Text>
 
         <Box fontSize="sm" display={{ base: 'none', md: 'flex' }}>
           {cookies.token ? (
