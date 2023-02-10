@@ -5,11 +5,12 @@ import React, { FC, memo, useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { Link, useNavigate } from 'react-router-dom'
 import { url } from '../../../const'
+import { useUser } from '../../../hooks/useUser'
 
 const Header: FC = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(['token'])
-  const [username, setUsername] = useState<string>('')
+  const [cookies, , removeCookie] = useCookies(['token'])
   const navigate = useNavigate()
+  const { getUser, user } = useUser()
 
   const onClickTitle = () => {
     navigate('/')
@@ -31,23 +32,9 @@ const Header: FC = () => {
 
   useEffect(() => {
     if (cookies.token) {
-      axios
-        .get(`${url}/users`, {
-          headers: {
-            Authorization: `
-          Bearer ${cookies.token}
-        `,
-          },
-        })
-        .then((res) => {
-          setUsername(res.data.name)
-        })
-        .catch((err) => {
-          console.error(err)
-          removeCookie('token')
-        })
+      getUser()
     }
-  }, [username])
+  }, [])
 
   return (
     <>
@@ -65,13 +52,13 @@ const Header: FC = () => {
             </Heading>
           </Box>
         </Flex>
-        <Text onClick={onClickProfile}>プロフィール</Text>
         <Text onClick={onClickCreateReview}>レビュー登録</Text>
+        <Text onClick={onClickProfile}>プロフィール</Text>
 
         <Box fontSize="sm" display={{ base: 'none', md: 'flex' }}>
           {cookies.token ? (
             <>
-              <Text pr={10}>{username}</Text>
+              <Text pr={10}>{user?.name}</Text>
               <Text onClick={onClickLogout}>ログアウト</Text>
             </>
           ) : (

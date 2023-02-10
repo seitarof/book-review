@@ -28,20 +28,37 @@ const Home = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    axios
-      .get(`${url}/books?offset=${offset}`, {
-        headers: {
-          Authorization: `
-          Bearer ${cookies.token}
-        `,
-        },
-      })
-      .then((res) => {
-        setBooks(res.data)
-      })
-      .catch((err) => {
-        console.error(err)
-      })
+    if (cookies.token) {
+      axios
+        .get(`${url}/books?offset=${offset}`, {
+          headers: {
+            Authorization: `
+            Bearer ${cookies.token}
+          `,
+          },
+        })
+        .then((res) => {
+          setBooks(res.data)
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    } else {
+      axios
+        .get(`${url}/public/books?offset=${offset}`, {
+          headers: {
+            Authorization: `
+            Bearer ${cookies.token}
+          `,
+          },
+        })
+        .then((res) => {
+          setBooks(res.data)
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    }
   }, [offset])
 
   return (

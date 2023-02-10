@@ -62,13 +62,13 @@ const CreateReview = () => {
   }
   return (
     <>
-      <VStack align="center" justify="center" height="80vh" spacing={6}>
+      <VStack justify="center" height="80vh" spacing={6}>
         <Box w="sm" p={4} borderRadius="md" shadow="md">
           <Heading as="h1" size="lg" textAlign="center">
             レビュー登録
           </Heading>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <FormControl isInvalid={!!errors.title}>
+            <FormControl isInvalid={!!errors.title} mt={5} >
               <FormLabel>タイトル</FormLabel>
               <Input
                 type="text"
@@ -82,7 +82,7 @@ const CreateReview = () => {
                 {errors.title && errors.title.message}
               </FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={!!errors.url}>
+            <FormControl isInvalid={!!errors.url} mt={5}>
               <FormLabel>URL</FormLabel>
               <InputGroup size='sm'>
                 <InputLeftAddon>https://</InputLeftAddon>
@@ -99,10 +99,9 @@ const CreateReview = () => {
                 {errors.url && errors.url.message}
               </FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={!!errors.detail}>
-              <FormLabel>レビュワー</FormLabel>
-              <Input
-                type='text'
+            <FormControl isInvalid={!!errors.detail} mt={5}>
+              <FormLabel>詳細</FormLabel>
+              <Textarea
                 id="detail"
                 placeholder="詳細"
                 {...register('detail', {
@@ -113,7 +112,7 @@ const CreateReview = () => {
                 {errors.detail && errors.detail.message}
               </FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={!!errors.review}>
+            <FormControl isInvalid={!!errors.review} mt={5} >
               <FormLabel>レビュー</FormLabel>
               <Textarea
                 id="review"
@@ -126,7 +125,7 @@ const CreateReview = () => {
                 {errors.review && errors.review.message}
               </FormErrorMessage>
             </FormControl>
-            <Button colorScheme="teal" type="submit" isLoading={isSubmitting}>
+            <Button mt={5} colorScheme="teal" type="submit" isLoading={isSubmitting} width='100%'>
               登録
             </Button>
           </form>

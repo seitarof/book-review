@@ -39,7 +39,6 @@ const SignIn = () => {
       email: d.email,
       password: d.password,
     }
-    console.log(data)
 
     axios
       .post(url + '/signin', data)

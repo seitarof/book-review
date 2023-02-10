@@ -11,17 +11,16 @@ import {
 import axios from 'axios'
 import React, { ChangeEvent, useEffect, useLayoutEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
-import { useNavigate } from 'react-router'
 import { url } from '../../const'
 import { useMessage } from '../../hooks/useMessage'
+import { useUser } from '../../hooks/useUser'
 import { User } from '../../types/User'
 
 const EditUser = () => {
   const [cookie] = useCookies(['token'])
-  const navigate = useNavigate()
-  const [username, setUsername] = useState<string>()
-  const [icon, setIcon] = useState<string>()
+  // const [username, setUsername] = useState<string>('')
   const { showMessage } = useMessage()
+  const { getUser, user, setUsername } = useUser()
 
   const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value)
@@ -31,7 +30,7 @@ const EditUser = () => {
     axios
       .put(
         `${url}/users`,
-        { name: username },
+        { name: user?.name },
         {
           headers: {
             Authorization: `Bearer ${cookie.token}`,
@@ -47,19 +46,7 @@ const EditUser = () => {
   }
 
   useEffect(() => {
-    axios
-      .get(`${url}/users`, {
-        headers: {
-          Authorization: `Bearer ${cookie.token}`,
-        },
-      })
-      .then((res) => {
-        setUsername(res.data.name)
-        setIcon(res.data.iconUrl)
-      })
-      .catch((err) => {
-        navigate('/')
-      })
+    getUser()
   }, [])
 
   return (
@@ -73,13 +60,13 @@ const EditUser = () => {
       >
         <Text>名前</Text>
         <Flex>
-          <Input value={username} maxWidth={300} onChange={handleChangeName} />
+          <Input value={user?.name || ""} maxWidth={300} onChange={handleChangeName} />
           <Button onClick={putName} ml={5}>
             変更
           </Button>
         </Flex>
-        <Text>アイコン</Text>
-        <Img src={icon} />
+        <Text pt={10}>アイコン</Text>
+        <Img src={user?.iconUrl} />
       </VStack>
     </>
   )
