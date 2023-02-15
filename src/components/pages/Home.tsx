@@ -42,6 +42,7 @@ const Home = () => {
         })
         .catch((err) => {
           console.error(err)
+          removeCookie('token')
         })
     } else {
       axios

@@ -7,9 +7,14 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
+import axios from 'axios'
 import React, { FC } from 'react'
+import { useCookies } from 'react-cookie'
+import { useNavigate } from 'react-router'
+import { url as baseUrl } from '../../../const'
 
 type Props = {
+  id: string
   title: string
   url: string
   review: string
@@ -17,11 +22,26 @@ type Props = {
 }
 
 const BookCard: FC<Props> = (props) => {
-  const { title, url, review, reviewer } = props
+  const { id, title, url, review, reviewer } = props
+  const [cookies] = useCookies(['token'])
+  const navigate = useNavigate()
+
+  const handleCardClick = () => {
+    axios.post(`${baseUrl}/logs`, { selectBookId: id }, {
+      headers: {
+        Authorization: `Bearer ${cookies.token}`
+      }
+    }).then(res => {
+      console.log(res);
+    }).catch(err => {
+      console.error(err);
+    })
+    navigate(`/detail/${id}`)
+  }
 
   return (
     <>
-      <Card w={400} h={400}>
+      <Card w={400} h={400} onClick={handleCardClick}>
         <CardHeader>
           <Heading size="md">{title}</Heading>
         </CardHeader>

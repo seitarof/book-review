@@ -24,6 +24,7 @@ const Books: FC<Props> = (props) => {
           books.map((book) => (
             <WrapItem mx="auto" key={book.id}>
               <BookCard
+                id={book.id}
                 title={book.title}
                 url={book.url}
                 review={book.review}

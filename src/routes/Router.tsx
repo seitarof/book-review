@@ -2,6 +2,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Books from '../components/organisms/books/Books'
 import CreateReview from '../components/pages/CreateReview'
+import DetailReview from '../components/pages/DetailReview'
 import EditUser from '../components/pages/EditUser'
 import Home from '../components/pages/Home'
 import SignIn from '../components/pages/SignIn'
@@ -34,6 +35,14 @@ const Router = () => {
         element={
           <HeaderLayout>
             <CreateReview />
+          </HeaderLayout>
+        }
+      />
+      <Route
+        path="/detail/:id"
+        element={
+          <HeaderLayout>
+            <DetailReview />
           </HeaderLayout>
         }
       />
