@@ -30,6 +30,7 @@ const Books: FC<Props> = (props) => {
                 review={book.review}
                 reviewer={book.reviewer}
                 key={book.id}
+                isMine={book.isMine}
               />
             </WrapItem>
           ))

@@ -19,10 +19,11 @@ type Props = {
   url: string
   review: string
   reviewer: string
+  isMine: boolean
 }
 
 const BookCard: FC<Props> = (props) => {
-  const { id, title, url, review, reviewer } = props
+  const { id, title, url, review, reviewer, isMine } = props
   const [cookies] = useCookies(['token'])
   const navigate = useNavigate()
 
@@ -36,7 +37,11 @@ const BookCard: FC<Props> = (props) => {
     }).catch(err => {
       console.error(err);
     })
-    navigate(`/detail/${id}`)
+    if (isMine) {
+      navigate(`/edit/${id}`)
+    } else {
+      navigate(`/detail/${id}`)
+    }
   }
 
   return (

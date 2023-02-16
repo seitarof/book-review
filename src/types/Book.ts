@@ -5,5 +5,5 @@ export type Book = {
   detail: string
   review: string
   reviewer: string
-  isMine: true
+  isMine: boolean
 }
