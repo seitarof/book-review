@@ -11,6 +11,8 @@ import {
 import axios from 'axios'
 import React, { ChangeEvent, useEffect, useLayoutEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
+import { setUsername } from '../../app/usernameSlice'
 import { url } from '../../const'
 import { useMessage } from '../../hooks/useMessage'
 import { useUser } from '../../hooks/useUser'
@@ -18,12 +20,12 @@ import { User } from '../../types/User'
 
 const EditUser = () => {
   const [cookie] = useCookies(['token'])
-  // const [username, setUsername] = useState<string>('')
+  const { getUser, user, setUser } = useUser()
   const { showMessage } = useMessage()
-  const { getUser, user, setUsername } = useUser()
+  const dispatch = useAppDispatch()
 
   const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value)
+    setUser({ iconUrl: user?.iconUrl as string, name: e.target.value })
   }
 
   const putName = () => {
@@ -37,8 +39,9 @@ const EditUser = () => {
           },
         }
       )
-      .then(() => {
+      .then((res) => {
         showMessage({ status: 'success', title: '名前を変更しました' })
+        dispatch(setUsername(res.data.name))
       })
       .catch((err) => {
         showMessage({ status: 'error', title: err })
@@ -60,7 +63,11 @@ const EditUser = () => {
       >
         <Text>名前</Text>
         <Flex>
-          <Input value={user?.name || ""} maxWidth={300} onChange={handleChangeName} />
+          <Input
+            value={user?.name || ''}
+            maxWidth={300}
+            onChange={handleChangeName}
+          />
           <Button onClick={putName} ml={5}>
             変更
           </Button>

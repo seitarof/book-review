@@ -44,7 +44,7 @@ const CreateReview = () => {
       title: value.title,
       url: `https://${value.url}`,
       detail: value.detail,
-      review: value.review
+      review: value.review,
     }
     axios
       .post(`${url}/books`, data, {
@@ -68,7 +68,7 @@ const CreateReview = () => {
             レビュー登録
           </Heading>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <FormControl isInvalid={!!errors.title} mt={5} >
+            <FormControl isInvalid={!!errors.title} mt={5}>
               <FormLabel>タイトル</FormLabel>
               <Input
                 type="text"
@@ -84,7 +84,7 @@ const CreateReview = () => {
             </FormControl>
             <FormControl isInvalid={!!errors.url} mt={5}>
               <FormLabel>URL</FormLabel>
-              <InputGroup size='sm'>
+              <InputGroup size="sm">
                 <InputLeftAddon>https://</InputLeftAddon>
                 <Input
                   type="text"
@@ -112,7 +112,7 @@ const CreateReview = () => {
                 {errors.detail && errors.detail.message}
               </FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={!!errors.review} mt={5} >
+            <FormControl isInvalid={!!errors.review} mt={5}>
               <FormLabel>レビュー</FormLabel>
               <Textarea
                 id="review"
@@ -125,7 +125,13 @@ const CreateReview = () => {
                 {errors.review && errors.review.message}
               </FormErrorMessage>
             </FormControl>
-            <Button mt={5} colorScheme="teal" type="submit" isLoading={isSubmitting} width='100%'>
+            <Button
+              mt={5}
+              colorScheme="teal"
+              type="submit"
+              isLoading={isSubmitting}
+              width="100%"
+            >
               登録
             </Button>
           </form>

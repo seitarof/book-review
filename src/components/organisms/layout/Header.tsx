@@ -1,16 +1,15 @@
-import { Box, Button, Flex, Heading, LinkBox, Text } from '@chakra-ui/react'
-import axios from 'axios'
-import { remove } from 'cypress/types/lodash'
-import React, { FC, memo, useEffect, useState } from 'react'
+import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
+import React, { FC, memo, useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 import { Link, useNavigate } from 'react-router-dom'
-import { url } from '../../../const'
+import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 import { useUser } from '../../../hooks/useUser'
 
-const Header: FC = () => {
+const Header: FC = memo(() => {
   const [cookies, , removeCookie] = useCookies(['token'])
   const navigate = useNavigate()
-  const { getUser, user } = useUser()
+  const username = useAppSelector((state) => state.username.value)
+  const { getUser } = useUser()
 
   const onClickTitle = () => {
     navigate('/')
@@ -31,10 +30,9 @@ const Header: FC = () => {
   }
 
   useEffect(() => {
-    if (cookies.token) {
-      getUser()
-    }
-  }, [])
+    getUser()
+    console.log(username);
+  }, [username])
 
   return (
     <>
@@ -58,7 +56,7 @@ const Header: FC = () => {
         <Box fontSize="sm" display={{ base: 'none', md: 'flex' }}>
           {cookies.token ? (
             <>
-              <Text pr={10}>{user?.name}</Text>
+              <Text pr={10}>{username}</Text>
               <Text onClick={onClickLogout}>ログアウト</Text>
             </>
           ) : (
@@ -68,7 +66,7 @@ const Header: FC = () => {
       </Flex>
     </>
   )
-}
+})
 
 Header.displayName = 'Header'
 

@@ -28,15 +28,19 @@ const BookCard: FC<Props> = (props) => {
   const navigate = useNavigate()
 
   const handleCardClick = () => {
-    axios.post(`${baseUrl}/logs`, { selectBookId: id }, {
-      headers: {
-        Authorization: `Bearer ${cookies.token}`
-      }
-    }).then(res => {
-      console.log(res);
-    }).catch(err => {
-      console.error(err);
-    })
+    axios
+      .post(
+        `${baseUrl}/logs`,
+        { selectBookId: id },
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.token}`,
+          },
+        }
+      )
+      .catch((err) => {
+        console.error(err)
+      })
     if (isMine) {
       navigate(`/edit/${id}`)
     } else {
