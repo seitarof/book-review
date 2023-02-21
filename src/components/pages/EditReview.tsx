@@ -38,11 +38,12 @@ const EditReview = () => {
     formState: { errors, isSubmitting },
   } = useForm<Input>()
   const { showMessage } = useMessage()
+  const navigate = useNavigate()
 
   const onSubmit: SubmitHandler<Input> = (value) => {
     const data = {
       title: value.title,
-      url: `https://${value.url}`,
+      url: `${value.url}`,
       detail: value.detail,
       review: value.review,
     }
@@ -54,6 +55,22 @@ const EditReview = () => {
       })
       .then((res) => {
         showMessage({ status: 'success', title: 'レビューを更新しました！' })
+      })
+      .catch((err) => {
+        showMessage({ status: 'error', title: err })
+      })
+  }
+
+  const onClickDelete = () => {
+    axios
+      .delete(`${url}/books/${params.id}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.token}`,
+        },
+      })
+      .then((res) => {
+        showMessage({ status: 'success', title: 'レビューを削除しました！' })
+        navigate('/')
       })
       .catch((err) => {
         showMessage({ status: 'error', title: err })
@@ -102,17 +119,14 @@ const EditReview = () => {
             </FormControl>
             <FormControl isInvalid={!!errors.url} mt={5}>
               <FormLabel>URL</FormLabel>
-              <InputGroup size="sm">
-                <InputLeftAddon>https://</InputLeftAddon>
-                <Input
-                  type="text"
-                  id="url"
-                  placeholder="URL"
-                  {...register('url', {
-                    required: 'この項目は必須です',
-                  })}
-                />
-              </InputGroup>
+              <Input
+                type="text"
+                id="url"
+                placeholder="URL"
+                {...register('url', {
+                  required: 'この項目は必須です',
+                })}
+              />
               <FormErrorMessage>
                 {errors.url && errors.url.message}
               </FormErrorMessage>
@@ -151,6 +165,15 @@ const EditReview = () => {
               width="100%"
             >
               更新
+            </Button>
+            <Button
+              mt={5}
+              colorScheme="red"
+              type="button"
+              width="100%"
+              onClick={onClickDelete}
+            >
+              削除
             </Button>
           </form>
         </Box>

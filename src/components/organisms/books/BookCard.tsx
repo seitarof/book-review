@@ -37,7 +37,9 @@ const BookCard: FC<Props> = (props) => {
             Authorization: `Bearer ${cookies.token}`,
           },
         }
-      )
+      ).then(res => {
+        console.log(res);
+      })
       .catch((err) => {
         console.error(err)
       })
